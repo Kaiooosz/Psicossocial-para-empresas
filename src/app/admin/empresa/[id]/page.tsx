@@ -4,7 +4,12 @@ import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { relatorioEmpresa } from "@/lib/metrics";
-import { NIVEL_META, NOME_PILAR, type Pilar } from "@/lib/scoring";
+import {
+  NIVEL_META,
+  NOME_PILAR,
+  interpretarCruzamento,
+  type Pilar,
+} from "@/lib/scoring";
 import AdminShell from "../../AdminShell";
 import LinksRespondentes from "./LinksRespondentes";
 
@@ -161,6 +166,59 @@ export default async function EmpresaDetalhe({
                       respondentes={lider.respondentes}
                     />
                   </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Cruzamento de percepção colaborador x líder */}
+      <h2 className="mt-12 text-lg font-bold tracking-tight">
+        Cruzamento de percepção
+      </h2>
+      <p className="mt-1 text-sm text-muted">
+        Comparação entre o que colaboradores e líderes percebem em cada pilar, com
+        a leitura do gap.
+      </p>
+      <div className="mt-5 overflow-hidden rounded-xl border border-border bg-card">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted">
+              <th className="px-5 py-3 font-medium">Pilar</th>
+              <th className="px-5 py-3 font-medium">Colab.</th>
+              <th className="px-5 py-3 font-medium">Líderes</th>
+              <th className="px-5 py-3 font-medium">Gap</th>
+              <th className="px-5 py-3 font-medium">Interpretação</th>
+            </tr>
+          </thead>
+          <tbody>
+            {PILARES.map((pilar) => {
+              const colab = indice(pilar, "COLABORADOR");
+              const lider = indice(pilar, "LIDER");
+              const cruz = interpretarCruzamento(colab.indice, lider.indice);
+              const gap =
+                colab.indice !== null && lider.indice !== null
+                  ? colab.indice - lider.indice
+                  : null;
+              return (
+                <tr
+                  key={pilar}
+                  className="border-b border-border last:border-0"
+                >
+                  <td className="px-5 py-4 font-medium">{NOME_PILAR[pilar]}</td>
+                  <td className="px-5 py-4 tabular-nums text-muted">
+                    {colab.indice === null ? "—" : colab.indice.toFixed(0)}
+                  </td>
+                  <td className="px-5 py-4 tabular-nums text-muted">
+                    {lider.indice === null ? "—" : lider.indice.toFixed(0)}
+                  </td>
+                  <td className="px-5 py-4 tabular-nums font-medium">
+                    {gap === null
+                      ? "—"
+                      : `${gap > 0 ? "+" : ""}${gap.toFixed(0)}`}
+                  </td>
+                  <td className="px-5 py-4 text-muted">{cruz.texto}</td>
                 </tr>
               );
             })}

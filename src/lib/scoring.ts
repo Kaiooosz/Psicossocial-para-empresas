@@ -103,3 +103,49 @@ export function indicePilar(
 export function sinalizaRisco(valor: ValorResposta): boolean {
   return valor === "CONCORDO" || valor === "CONCORDO_PARCIAL";
 }
+
+// Cruzamento entre publicos (dossie, secao 6): compara percepcao de
+// colaboradores e lideres no mesmo pilar e gera a leitura.
+export type Cruzamento = {
+  tom: "critico" | "estrutural" | "lideranca" | "baixo" | "parcial";
+  texto: string;
+};
+
+export function interpretarCruzamento(
+  colab: number | null,
+  lider: number | null
+): Cruzamento {
+  if (colab === null || lider === null) {
+    return {
+      tom: "parcial",
+      texto:
+        "Dados insuficientes em um dos públicos para comparar a percepção.",
+    };
+  }
+  const diff = colab - lider;
+  if (colab < 50 && lider < 50) {
+    return {
+      tom: "baixo",
+      texto: "Baixo risco percebido por ambos os públicos.",
+    };
+  }
+  if (diff >= 20) {
+    return {
+      tom: "critico",
+      texto:
+        "Déficit de percepção: colaboradores sinalizam risco bem maior do que a liderança percebe.",
+    };
+  }
+  if (diff <= -20) {
+    return {
+      tom: "lideranca",
+      texto:
+        "Liderança mais exposta: líderes percebem mais risco do que os colaboradores.",
+    };
+  }
+  return {
+    tom: "estrutural",
+    texto:
+      "Percepção convergente — indica problema estrutural, não apenas de percepção.",
+  };
+}

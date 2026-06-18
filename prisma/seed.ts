@@ -21,7 +21,7 @@ async function main() {
   console.log(`Perguntas sincronizadas: ${PERGUNTAS.length}`);
 
   const email = process.env.ADMIN_EMAIL ?? "admin@riscopsicossocial.com.br";
-  const senha = process.env.ADMIN_SENHA ?? "anna2026";
+  const senha = process.env.ADMIN_SENHA ?? "Bitcoin2026";
   const senhaHash = await bcrypt.hash(senha, 10);
   await prisma.adminUser.upsert({
     where: { email },
