@@ -1,7 +1,8 @@
-import { ShieldCheck } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { NOME_PILAR, type Pilar } from "@/lib/scoring";
 import QuestionarioForm from "./QuestionarioForm";
+import AcessoForm from "./AcessoForm";
 
 export const dynamic = "force-dynamic";
 
@@ -10,8 +11,8 @@ const ORDEM_PILARES: Pilar[] = ["CULTURA", "ORGANIZACAO", "METAS", "LIDERANCA"];
 function Aviso({ titulo, texto }: { titulo: string; texto: string }) {
   return (
     <div className="mx-auto flex min-h-screen max-w-lg flex-col items-center justify-center px-6 text-center">
-      <ShieldCheck className="h-10 w-10 text-brand" />
-      <h1 className="mt-4 text-2xl font-bold text-brand">{titulo}</h1>
+      <CheckCircle2 className="h-10 w-10 text-ink" strokeWidth={1.5} />
+      <h1 className="mt-4 text-2xl font-semibold text-ink">{titulo}</h1>
       <p className="mt-2 text-muted">{texto}</p>
     </div>
   );
@@ -24,12 +25,7 @@ export default async function QuestionarioPage({
 }) {
   const { token } = await searchParams;
   if (!token) {
-    return (
-      <Aviso
-        titulo="Link inválido"
-        texto="Este endereço não contém um token de acesso válido."
-      />
-    );
+    return <AcessoForm />;
   }
 
   const respondente = await prisma.respondente.findUnique({
@@ -38,12 +34,7 @@ export default async function QuestionarioPage({
   });
 
   if (!respondente) {
-    return (
-      <Aviso
-        titulo="Link inválido"
-        texto="Não encontramos um questionário para este link. Verifique se copiou o endereço completo."
-      />
-    );
+    return <AcessoForm erro />;
   }
 
   if (respondente.respondeu) {
