@@ -5,7 +5,6 @@ import {
   ClipboardList,
   Users,
   Target,
-  Building2,
   FileCheck2,
   ArrowRight,
   MessageCircle,
@@ -13,63 +12,36 @@ import {
   AtSign,
   MapPin,
 } from "lucide-react";
+import Reveal from "@/components/Reveal";
+import PilaresCarrossel from "@/components/PilaresCarrossel";
+import EtapasEscada from "@/components/EtapasEscada";
+import NiveisRisco from "@/components/NiveisRisco";
+import Faq from "@/components/Faq";
 
 const WHATSAPP = "https://wa.me/5521979901686";
 const EMAIL = "contato@bezerraborges.com.br";
 const INSTAGRAM = "https://www.instagram.com/bezerraeborges";
 const SITE = "https://www.bezerraborges.com.br";
 
-const PILARES = [
+const CASOS = [
   {
-    icon: Users,
-    nome: "Cultura Organizacional",
-    desc: "Segurança psicológica, pertencimento, respeito, liberdade de expressão e a liderança como exemplo cultural.",
+    contexto: "Indústria · ~200 funcionários",
+    dor: "Rotatividade alta e afastamentos por estresse, com receio de ações por assédio moral.",
+    desfecho:
+      "A análise apontou nível Grave em Liderança e Metas e um déficit de percepção da diretoria. A empresa recebeu plano de ação priorizado e laudo de conformidade com a NR-1.",
   },
   {
-    icon: ClipboardList,
-    nome: "Organização do Trabalho",
-    desc: "Sobrecarga, clareza de papéis, acúmulo de funções, equilíbrio vida-trabalho e disponibilidade de recursos.",
+    contexto: "Rede varejista · dezenas de lojas",
+    dor: "Metas agressivas e lideranças despreparadas gerando clima tenso e queda de produtividade.",
+    desfecho:
+      "Colaboradores e líderes confirmaram sobrecarga estrutural. O encaminhamento foi revisão do processo de metas, capacitação de líderes e evidência documentada para o GRO.",
   },
   {
-    icon: Target,
-    nome: "Metas e Performance",
-    desc: "Atingibilidade das metas, clareza dos critérios, percepção de justiça nas cobranças e autonomia para executar.",
+    contexto: "Empresa de tecnologia · ~50 pessoas",
+    dor: "Crescimento rápido, sinais de burnout e nenhum processo formal de gestão de risco psicossocial.",
+    desfecho:
+      "Cultura e Organização em nível Médio, com risco crescente. Recomendou-se canal de escuta e monitoramento periódico, demonstrando conformidade antes da autuação.",
   },
-  {
-    icon: Building2,
-    nome: "Liderança e Gestão de Pessoas",
-    desc: "Confiança na liderança, qualidade do feedback, apoio recebido, preparo do líder e reconhecimento.",
-  },
-];
-
-const ETAPAS = [
-  {
-    n: "01",
-    titulo: "Entrevista com o CEO",
-    desc: "Mapeamento da visão estratégica, valores declarados e crenças que moldam a cultura — contexto qualitativo para interpretar os dados.",
-  },
-  {
-    n: "02",
-    titulo: "Aplicação dos Questionários",
-    desc: "Dois questionários anônimos, um para líderes e um para colaboradores, com 60 perguntas cada estruturadas nos quatro pilares.",
-  },
-  {
-    n: "03",
-    titulo: "Entrevistas com a Psicóloga",
-    desc: "Escuta coletiva ou individual conforme o porte da empresa, capturando narrativas que os dados quantitativos não revelam.",
-  },
-  {
-    n: "04",
-    titulo: "Diagnóstico, Plano e Laudo",
-    desc: "Índice de risco por pilar, plano de ação priorizado e laudo final assinado por advogado e psicóloga com registro profissional.",
-  },
-];
-
-const NIVEIS = [
-  { nivel: "Gravíssimo", faixa: "Acima de 90", desc: "Intervenção imediata. Risco jurídico ativo." },
-  { nivel: "Grave", faixa: "70 a 90", desc: "Intervenção urgente, com margem para reversão." },
-  { nivel: "Médio", faixa: "50 a 70", desc: "Ação preventiva pode corrigir os fatores de risco." },
-  { nivel: "Baixo", faixa: "Abaixo de 50", desc: "Poucos sinais de risco. Monitoramento periódico." },
 ];
 
 function Marca({ branco = false }: { branco?: boolean }) {
@@ -89,7 +61,7 @@ function Marca({ branco = false }: { branco?: boolean }) {
 export default function Home() {
   return (
     <div className="flex flex-col">
-      <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-4">
             <Marca />
@@ -110,7 +82,7 @@ export default function Home() {
       {/* HERO */}
       <section className="border-b border-border bg-paper">
         <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:py-28">
-          <div>
+          <Reveal>
             <span className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-accent">
               <Scale className="h-3.5 w-3.5" />
               NR-1 atualizada em 2024 · obrigação legal
@@ -138,109 +110,125 @@ export default function Home() {
                 Falar com o escritório
               </Link>
             </div>
-          </div>
+          </Reveal>
 
-          <div className="border border-border bg-card p-7">
-            <p className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
-              Por que isso é urgente
-            </p>
-            <ul className="mt-5 space-y-4 text-sm leading-relaxed text-ink-soft">
-              {[
-                "A NR-1 passou a incluir riscos psicossociais como obrigação de gerenciamento (GRO).",
-                "Empresas sem mapeamento estão sujeitas a autuações, multas e ações trabalhistas.",
-                "Assédio moral, burnout e adoecimento psíquico geram passivo trabalhista crescente.",
-                "O laudo assinado reduz significativamente a exposição em processos.",
-              ].map((t) => (
-                <li key={t} className="flex gap-3 border-b border-border pb-4 last:border-0 last:pb-0">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" />
-                  <span>{t}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* PILARES */}
-      <section className="mx-auto max-w-6xl px-6 py-20">
-        <p className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
-          Quatro pilares de análise
-        </p>
-        <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight text-ink">
-          Onde o risco realmente se esconde
-        </h2>
-        <div className="mt-10 grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-2">
-          {PILARES.map((p) => (
-            <div key={p.nome} className="bg-card p-7">
-              <p.icon className="h-5 w-5 text-ink" strokeWidth={1.5} />
-              <h3 className="mt-4 text-lg font-medium text-ink">{p.nome}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{p.desc}</p>
+          <Reveal dir="right" delay={0.1}>
+            <div className="border border-border bg-card p-7">
+              <p className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
+                Por que isso é urgente
+              </p>
+              <ul className="mt-5 space-y-4 text-sm leading-relaxed text-ink-soft">
+                {[
+                  "A NR-1 passou a incluir riscos psicossociais como obrigação de gerenciamento (GRO).",
+                  "Empresas sem mapeamento estão sujeitas a autuações, multas e ações trabalhistas.",
+                  "Assédio moral, burnout e adoecimento psíquico geram passivo trabalhista crescente.",
+                  "O laudo assinado reduz significativamente a exposição em processos.",
+                ].map((t) => (
+                  <li
+                    key={t}
+                    className="flex gap-3 border-b border-border pb-4 last:border-0 last:pb-0"
+                  >
+                    <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" />
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-          ))}
+          </Reveal>
         </div>
       </section>
 
-      {/* METODOLOGIA */}
+      {/* PILARES — carrossel */}
+      <section className="mx-auto max-w-6xl px-6 py-20">
+        <PilaresCarrossel />
+      </section>
+
+      {/* METODOLOGIA — escada + níveis */}
       <section id="metodologia" className="border-y border-border bg-paper">
         <div className="mx-auto max-w-6xl px-6 py-20">
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
-            Metodologia
-          </p>
-          <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight text-ink">
-            Da escuta ao laudo, em quatro etapas
-          </h2>
-          <div className="mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {ETAPAS.map((e) => (
-              <div key={e.n} className="border-t border-ink pt-4">
-                <span className="text-sm font-medium text-accent">{e.n}</span>
-                <h3 className="mt-2 text-base font-medium text-ink">{e.titulo}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{e.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-14 border border-border bg-card">
-            <div className="border-b border-border px-7 py-5">
-              <h3 className="text-lg font-medium text-ink">Níveis de risco</h3>
-              <p className="mt-1 text-sm text-muted">
-                Cada pilar recebe um índice de 0 a 100. Quanto maior, maior o risco.
-              </p>
-            </div>
-            <div className="divide-y divide-border">
-              {NIVEIS.map((n) => (
-                <div key={n.nivel} className="flex flex-wrap items-baseline gap-x-6 gap-y-1 px-7 py-4">
-                  <span className="w-28 text-sm font-medium text-ink">{n.nivel}</span>
-                  <span className="w-28 text-sm tabular-nums text-muted">Índice {n.faixa}</span>
-                  <span className="flex-1 text-sm text-muted">{n.desc}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <Reveal>
+            <p className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
+              Metodologia
+            </p>
+            <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight text-ink">
+              Da escuta ao laudo, em quatro etapas
+            </h2>
+          </Reveal>
+          <EtapasEscada />
+          <NiveisRisco />
         </div>
       </section>
 
       {/* ENTREGÁVEIS */}
       <section className="mx-auto max-w-6xl px-6 py-20">
-        <p className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
-          Entregáveis
-        </p>
-        <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight text-ink">
-          O que sua empresa recebe
-        </h2>
+        <Reveal>
+          <p className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
+            Entregáveis
+          </p>
+          <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight text-ink">
+            O que sua empresa recebe
+          </h2>
+        </Reveal>
         <div className="mt-10 grid gap-px overflow-hidden border border-border bg-border md:grid-cols-2 lg:grid-cols-4">
           {[
             { icon: ClipboardList, t: "Diagnóstico quantitativo", d: "Índice por pilar e público, classificação de risco e percentual de sinalização por pergunta." },
             { icon: Users, t: "Diagnóstico qualitativo", d: "Narrativas recorrentes e alinhamento entre a visão do CEO e a realidade percebida." },
             { icon: Target, t: "Plano de ação sugerido", d: "Para cada pilar de risco: ação recomendada, prioridade, prazo e indicador de acompanhamento." },
             { icon: FileCheck2, t: "Laudo final assinado", d: "Enquadramento legal na NR-1 e declaração de conformidade, assinada por advogado e psicóloga." },
-          ].map((e) => (
-            <div key={e.t} className="bg-card p-7">
-              <e.icon className="h-5 w-5 text-ink" strokeWidth={1.5} />
+          ].map((e, i) => (
+            <Reveal key={e.t} delay={i * 0.06} className="bg-card p-7">
+              <e.icon className="h-5 w-5 text-accent" strokeWidth={1.5} />
               <h3 className="mt-4 text-base font-medium text-ink">{e.t}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">{e.d}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
+      </section>
+
+      {/* CASOS — cenários ilustrativos */}
+      <section className="border-y border-border bg-paper">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <Reveal>
+            <p className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
+              Cenários ilustrativos
+            </p>
+            <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight text-ink">
+              Dores comuns — e o que a análise revela
+            </h2>
+          </Reveal>
+          <div className="mt-10 grid gap-5 lg:grid-cols-3">
+            {CASOS.map((c, i) => (
+              <Reveal key={c.contexto} delay={i * 0.08}>
+                <div className="flex h-full flex-col border border-border bg-card p-7">
+                  <p className="text-xs font-medium uppercase tracking-[0.14em] text-accent">
+                    {c.contexto}
+                  </p>
+                  <p className="mt-4 text-sm font-medium text-ink">{c.dor}</p>
+                  <div className="mt-4 border-t border-border pt-4">
+                    <p className="text-sm leading-relaxed text-muted">{c.desfecho}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <p className="mt-6 text-xs text-muted">
+            Exemplos ilustrativos para fins educativos. Não representam clientes
+            específicos nem promessa de resultado.
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="mx-auto max-w-3xl px-6 py-20">
+        <Reveal>
+          <p className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
+            Dúvidas frequentes
+          </p>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-ink">
+            O que as empresas mais perguntam
+          </h2>
+        </Reveal>
+        <Faq />
       </section>
 
       {/* CONTATO */}
@@ -265,12 +253,12 @@ export default function Home() {
                 >
                   <MessageCircle className="h-4 w-4" /> WhatsApp
                 </a>
-                <a
-                  href={`mailto:${EMAIL}`}
+                <Link
+                  href="/questionario"
                   className="inline-flex items-center gap-2 rounded-sm border border-white/25 px-6 py-3 text-sm font-medium text-white transition hover:border-white/50"
                 >
-                  <Mail className="h-4 w-4" /> E-mail
-                </a>
+                  Responder agora <ArrowRight className="h-4 w-4" />
+                </Link>
               </div>
             </div>
 
@@ -300,7 +288,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="border-t border-border bg-ink">
+      <footer className="border-t border-white/10 bg-ink">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-8 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between">
           <p>
             Bezerra Borges Advogados ·{" "}
