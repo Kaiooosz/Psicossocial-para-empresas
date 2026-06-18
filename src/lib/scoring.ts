@@ -18,6 +18,15 @@ export const PONTUACAO: Record<ValorResposta, number> = {
   DISCORDO_TOTAL: 0,
 };
 
+// Cor do mapa de calor por resposta (verde = sem risco, vermelho = risco alto).
+export const COR_RESPOSTA: Record<ValorResposta, { bg: string; label: string }> = {
+  CONCORDO: { bg: "#b91c1c", label: "Concordo" },
+  CONCORDO_PARCIAL: { bg: "#ea7a4a", label: "Concordo Parc." },
+  DISCORDO_PARCIAL: { bg: "#e0b341", label: "Discordo Parc." },
+  NEUTRO: { bg: "#cbd0d8", label: "Neutro" },
+  DISCORDO_TOTAL: { bg: "#3f8f6b", label: "Discordo" },
+};
+
 export const OPCOES: { valor: ValorResposta; label: string }[] = [
   { valor: "CONCORDO", label: "Concordo" },
   { valor: "CONCORDO_PARCIAL", label: "Concordo Parcialmente" },

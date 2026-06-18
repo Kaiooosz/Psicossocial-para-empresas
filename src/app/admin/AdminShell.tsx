@@ -25,6 +25,14 @@ export default function AdminShell({
             </div>
           </Link>
           <div className="flex items-center gap-4">
+            <nav className="hidden items-center gap-1 sm:flex">
+              <Link href="/admin" className="rounded-md px-3 py-1.5 text-sm text-muted transition hover:text-foreground">
+                Empresas
+              </Link>
+              <Link href="/admin/leads" className="rounded-md px-3 py-1.5 text-sm text-muted transition hover:text-foreground">
+                Leads
+              </Link>
+            </nav>
             <span className="text-sm text-muted">{nome}</span>
             <form action={logoutAdmin}>
               <button

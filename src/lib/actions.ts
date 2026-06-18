@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "./prisma";
 import { criarSessao, encerrarSessao, getAdmin } from "./auth";
 import { gerarToken } from "./token";
-import { PONTUACAO, type ValorResposta } from "./scoring";
+import { PONTUACAO, type TipoRespondente, type ValorResposta } from "./scoring";
 
 export async function loginAdmin(_prev: unknown, formData: FormData) {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
@@ -94,6 +94,65 @@ export async function submeterQuestionario(
       data: { respondeu: true, respondidoEm: new Date() },
     }),
   ]);
+
+  return { ok: true };
+}
+
+export type ContatoLead = {
+  nome: string;
+  email: string;
+  telefone: string;
+  empresa: string;
+  cargo: string;
+  tipo: TipoRespondente;
+};
+
+// Fluxo publico: o lead preenche contato + responde direto, sem token.
+export async function submeterPublico(
+  contato: ContatoLead,
+  respostas: Record<number, ValorResposta>
+): Promise<{ ok: boolean; erro?: string }> {
+  const nome = contato.nome?.trim();
+  const email = contato.email?.trim();
+  const telefone = contato.telefone?.trim();
+  if (!nome || !email || !telefone) {
+    return { ok: false, erro: "Preencha nome, e-mail e WhatsApp." };
+  }
+  if (contato.tipo !== "COLABORADOR" && contato.tipo !== "LIDER") {
+    return { ok: false, erro: "Selecione seu perfil." };
+  }
+
+  const perguntas = await prisma.pergunta.findMany({
+    where: { publico: contato.tipo },
+    select: { id: true },
+  });
+  for (const p of perguntas) {
+    if (!respostas[p.id]) {
+      return { ok: false, erro: "Responda todas as perguntas antes de enviar." };
+    }
+  }
+
+  await prisma.respondente.create({
+    data: {
+      tipo: contato.tipo,
+      origem: "PUBLICO",
+      token: gerarToken(16),
+      respondeu: true,
+      respondidoEm: new Date(),
+      contatoNome: nome,
+      contatoEmail: email,
+      contatoTelefone: telefone,
+      contatoEmpresa: contato.empresa?.trim() || null,
+      contatoCargo: contato.cargo?.trim() || null,
+      respostas: {
+        create: perguntas.map((p) => ({
+          perguntaId: p.id,
+          valor: respostas[p.id],
+          pontuacao: PONTUACAO[respostas[p.id]],
+        })),
+      },
+    },
+  });
 
   return { ok: true };
 }

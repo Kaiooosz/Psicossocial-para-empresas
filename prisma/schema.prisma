@@ -32,6 +32,11 @@ enum StatusEmpresa {
   CONCLUIDO
 }
 
+enum OrigemRespondente {
+  TOKEN
+  PUBLICO
+}
+
 model Empresa {
   id           String        @id @default(cuid())
   nome         String
@@ -42,17 +47,26 @@ model Empresa {
 }
 
 model Respondente {
-  id           String          @id @default(cuid())
-  empresaId    String
-  empresa      Empresa         @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  id           String            @id @default(cuid())
+  empresaId    String?
+  empresa      Empresa?          @relation(fields: [empresaId], references: [id], onDelete: Cascade)
   tipo         TipoRespondente
-  token        String          @unique
-  respondeu    Boolean         @default(false)
+  token        String            @unique
+  origem       OrigemRespondente @default(TOKEN)
+  respondeu    Boolean           @default(false)
   respondidoEm DateTime?
   respostas    Resposta[]
-  createdAt    DateTime        @default(now())
+  createdAt    DateTime          @default(now())
+
+  // Dados de contato (apenas para leads do fluxo publico)
+  contatoNome     String?
+  contatoEmail    String?
+  contatoTelefone String?
+  contatoEmpresa  String?
+  contatoCargo    String?
 
   @@index([empresaId])
+  @@index([origem])
 }
 
 model Pergunta {

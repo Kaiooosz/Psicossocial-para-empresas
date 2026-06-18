@@ -2,11 +2,25 @@ import { CheckCircle2 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { NOME_PILAR, type Pilar } from "@/lib/scoring";
 import QuestionarioForm from "./QuestionarioForm";
-import AcessoForm from "./AcessoForm";
+import QuestionarioPublico from "./QuestionarioPublico";
+import type { TipoRespondente } from "@/lib/scoring";
 
 export const dynamic = "force-dynamic";
 
 const ORDEM_PILARES: Pilar[] = ["CULTURA", "ORGANIZACAO", "METAS", "LIDERANCA"];
+
+function agrupar(
+  perguntas: { id: number; texto: string; pilar: string; publico: string }[],
+  publico: TipoRespondente
+) {
+  return ORDEM_PILARES.map((pilar) => ({
+    pilar,
+    nome: NOME_PILAR[pilar],
+    perguntas: perguntas
+      .filter((p) => p.publico === publico && p.pilar === pilar)
+      .map((p) => ({ id: p.id, texto: p.texto })),
+  }));
+}
 
 function Aviso({ titulo, texto }: { titulo: string; texto: string }) {
   return (
@@ -24,8 +38,21 @@ export default async function QuestionarioPage({
   searchParams: Promise<{ token?: string }>;
 }) {
   const { token } = await searchParams;
+
+  // Fluxo publico: sem token, o lead preenche contato e responde direto.
   if (!token) {
-    return <AcessoForm />;
+    const perguntas = await prisma.pergunta.findMany({
+      orderBy: [{ pilar: "asc" }, { ordem: "asc" }],
+      select: { id: true, texto: true, pilar: true, publico: true },
+    });
+    return (
+      <QuestionarioPublico
+        sets={{
+          COLABORADOR: agrupar(perguntas, "COLABORADOR"),
+          LIDER: agrupar(perguntas, "LIDER"),
+        }}
+      />
+    );
   }
 
   const respondente = await prisma.respondente.findUnique({
@@ -34,7 +61,12 @@ export default async function QuestionarioPage({
   });
 
   if (!respondente) {
-    return <AcessoForm erro />;
+    return (
+      <Aviso
+        titulo="Link inválido"
+        texto="Não encontramos um questionário para este link. Verifique se copiou o endereço completo."
+      />
+    );
   }
 
   if (respondente.respondeu) {

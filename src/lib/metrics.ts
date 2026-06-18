@@ -42,6 +42,24 @@ export type RelatorioEmpresa = {
   perguntas: RiscoPergunta[];
 };
 
+export type ScoreLeadPilar = {
+  pilar: Pilar;
+  indice: number;
+  nivel: ReturnType<typeof nivelRisco>;
+};
+
+// Pontuacao de um lead individual por pilar (soma das 15 respostas do pilar).
+export function scoreLead(
+  respostas: { pontuacao: number; pergunta: { pilar: string } }[]
+): ScoreLeadPilar[] {
+  return PILARES.map((pilar) => {
+    const indice = respostas
+      .filter((r) => r.pergunta.pilar === pilar)
+      .reduce((acc, r) => acc + r.pontuacao, 0);
+    return { pilar, indice, nivel: nivelRisco(indice) };
+  });
+}
+
 export async function relatorioEmpresa(
   empresaId: string
 ): Promise<RelatorioEmpresa | null> {
