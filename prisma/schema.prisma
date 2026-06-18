@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TipoRespondente {
+  COLABORADOR
+  LIDER
+}
+
+enum Pilar {
+  CULTURA
+  ORGANIZACAO
+  METAS
+  LIDERANCA
+}
+
+enum ValorResposta {
+  CONCORDO
+  CONCORDO_PARCIAL
+  NEUTRO
+  DISCORDO_PARCIAL
+  DISCORDO_TOTAL
+}
+
+enum StatusEmpresa {
+  EM_ANDAMENTO
+  CONCLUIDO
+}
+
+model Empresa {
+  id           String        @id @default(cuid())
+  nome         String
+  inicioEm     DateTime      @default(now())
+  status       StatusEmpresa @default(EM_ANDAMENTO)
+  respondentes Respondente[]
+  createdAt    DateTime      @default(now())
+}
+
+model Respondente {
+  id           String          @id @default(cuid())
+  empresaId    String
+  empresa      Empresa         @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  tipo         TipoRespondente
+  token        String          @unique
+  respondeu    Boolean         @default(false)
+  respondidoEm DateTime?
+  respostas    Resposta[]
+  createdAt    DateTime        @default(now())
+
+  @@index([empresaId])
+}
+
+model Pergunta {
+  id        Int             @id @default(autoincrement())
+  ordem     Int
+  texto     String
+  pilar     Pilar
+  publico   TipoRespondente
+  respostas Resposta[]
+
+  @@unique([pilar, publico, ordem])
+}
+
+model Resposta {
+  id            String        @id @default(cuid())
+  respondenteId String
+  respondente   Respondente   @relation(fields: [respondenteId], references: [id], onDelete: Cascade)
+  perguntaId    Int
+  pergunta      Pergunta      @relation(fields: [perguntaId], references: [id])
+  valor         ValorResposta
+  pontuacao     Float
+  createdAt     DateTime      @default(now())
+
+  @@unique([respondenteId, perguntaId])
+  @@index([perguntaId])
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  senhaHash String
+  nome      String
+  createdAt DateTime @default(now())
+}
