@@ -80,8 +80,18 @@ export default function Home() {
       </header>
 
       {/* HERO */}
-      <section className="border-b border-border bg-paper">
-        <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:py-28">
+      <section className="relative overflow-hidden border-b border-border bg-paper">
+        {/* Imagem com degradê suave */}
+        <div className="pointer-events-none absolute inset-0">
+          <div
+            className="absolute inset-y-0 right-0 w-[62%] bg-cover bg-center opacity-[0.5]"
+            style={{ backgroundImage: "url(/hero.jpg)" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-paper via-paper/92 to-paper/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-paper via-transparent to-paper/40" />
+          <div className="absolute -left-40 top-0 h-[420px] w-[420px] rounded-full bg-accent/10 blur-3xl" />
+        </div>
+        <div className="relative mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:py-28">
           <Reveal>
             <span className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-accent">
               <Scale className="h-3.5 w-3.5" />
@@ -99,13 +109,13 @@ export default function Home() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/questionario"
-                className="inline-flex items-center gap-2 rounded-sm bg-ink px-6 py-3 text-sm font-medium text-white transition hover:opacity-90"
+                className="sheen relative inline-flex items-center gap-2 overflow-hidden rounded-sm bg-ink px-6 py-3 text-sm font-medium text-white shadow-lg shadow-ink/10 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-ink/15"
               >
                 Ir para as perguntas <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="#contato"
-                className="inline-flex items-center gap-2 rounded-sm border border-ink/20 px-6 py-3 text-sm font-medium text-ink transition hover:border-ink/40"
+                className="inline-flex items-center gap-2 rounded-sm border border-ink/20 px-6 py-3 text-sm font-medium text-ink transition hover:-translate-y-0.5 hover:border-ink/40"
               >
                 Falar com o escritório
               </Link>
@@ -113,7 +123,7 @@ export default function Home() {
           </Reveal>
 
           <Reveal dir="right" delay={0.1}>
-            <div className="border border-border bg-card p-7">
+            <div className="rounded-xl border border-border bg-card/75 p-7 shadow-xl shadow-ink/5 backdrop-blur-md">
               <p className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
                 Por que isso é urgente
               </p>
@@ -198,8 +208,8 @@ export default function Home() {
           </Reveal>
           <div className="mt-10 grid gap-5 lg:grid-cols-3">
             {CASOS.map((c, i) => (
-              <Reveal key={c.contexto} delay={i * 0.08}>
-                <div className="flex h-full flex-col border border-border bg-card p-7">
+              <Reveal key={c.contexto} delay={i * 0.08} className="h-full">
+                <div className="flex h-full flex-col rounded-xl border border-border bg-card p-7 transition duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-xl hover:shadow-ink/5">
                   <p className="text-xs font-medium uppercase tracking-[0.14em] text-accent">
                     {c.contexto}
                   </p>

@@ -89,17 +89,22 @@ export default function PilaresCarrossel() {
         {PILARES.map((p) => (
           <article
             key={p.n}
-            className="relative h-[440px] w-[300px] shrink-0 snap-start overflow-hidden rounded-2xl sm:w-[380px]"
+            className="group relative h-[440px] w-[300px] shrink-0 snap-start overflow-hidden rounded-2xl shadow-lg shadow-ink/10 ring-1 ring-ink/5 sm:w-[380px]"
           >
             <div
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-105"
+              className="absolute inset-0 scale-105 bg-cover bg-center transition-transform duration-[1200ms] ease-out group-hover:scale-110"
               style={{ backgroundImage: `url(${p.img})` }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/55 to-ink/10" />
+            {/* Degradê suave em várias paradas */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_top,var(--ink)_2%,rgba(22,38,63,0.85)_22%,rgba(22,38,63,0.45)_48%,rgba(22,38,63,0.12)_78%,transparent_100%)]" />
+            {/* Brilho dourado sutil no hover */}
+            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-accent/25 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
             <div className="relative flex h-full flex-col justify-end p-7 text-white">
-              <span className="text-sm font-semibold text-accent">{p.n}</span>
-              <h3 className="mt-2 text-2xl font-semibold leading-tight">{p.nome}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-white/80">{p.desc}</p>
+              <span className="text-sm font-semibold text-gold-grad">{p.n}</span>
+              <h3 className="mt-2 text-2xl font-semibold leading-tight transition-transform duration-500 group-hover:-translate-y-1">
+                {p.nome}
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-white/85">{p.desc}</p>
             </div>
           </article>
         ))}
