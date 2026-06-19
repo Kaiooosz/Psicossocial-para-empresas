@@ -39,63 +39,73 @@ export default async function QuestionarioPage({
 }) {
   const { token } = await searchParams;
 
-  // Fluxo publico: sem token, o lead preenche contato e responde direto.
-  if (!token) {
-    const perguntas = await prisma.pergunta.findMany({
-      orderBy: [{ pilar: "asc" }, { ordem: "asc" }],
-      select: { id: true, texto: true, pilar: true, publico: true },
+  try {
+    // Fluxo publico: sem token, o lead preenche contato e responde direto.
+    if (!token) {
+      const perguntas = await prisma.pergunta.findMany({
+        orderBy: [{ pilar: "asc" }, { ordem: "asc" }],
+        select: { id: true, texto: true, pilar: true, publico: true },
+      });
+      return (
+        <QuestionarioPublico
+          sets={{
+            COLABORADOR: agrupar(perguntas, "COLABORADOR"),
+            LIDER: agrupar(perguntas, "LIDER"),
+          }}
+        />
+      );
+    }
+
+    const respondente = await prisma.respondente.findUnique({
+      where: { token },
+      include: { empresa: true },
     });
+
+    if (!respondente) {
+      return (
+        <Aviso
+          titulo="Link inválido"
+          texto="Não encontramos um questionário para este link. Verifique se copiou o endereço completo."
+        />
+      );
+    }
+
+    if (respondente.respondeu) {
+      return (
+        <Aviso
+          titulo="Questionário já respondido"
+          texto="Este link já foi utilizado. Cada pessoa responde apenas uma vez. Obrigado pela participação."
+        />
+      );
+    }
+
+    const perguntas = await prisma.pergunta.findMany({
+      where: { publico: respondente.tipo },
+      orderBy: [{ pilar: "asc" }, { ordem: "asc" }],
+    });
+
+    const grupos = ORDEM_PILARES.map((pilar) => ({
+      pilar,
+      nome: NOME_PILAR[pilar],
+      perguntas: perguntas
+        .filter((p) => p.pilar === pilar)
+        .map((p) => ({ id: p.id, texto: p.texto })),
+    }));
+
     return (
-      <QuestionarioPublico
-        sets={{
-          COLABORADOR: agrupar(perguntas, "COLABORADOR"),
-          LIDER: agrupar(perguntas, "LIDER"),
-        }}
+      <QuestionarioForm
+        token={token}
+        tipo={respondente.tipo}
+        grupos={grupos}
       />
     );
-  }
-
-  const respondente = await prisma.respondente.findUnique({
-    where: { token },
-    include: { empresa: true },
-  });
-
-  if (!respondente) {
+  } catch (e) {
+    console.error("Erro ao carregar questionário:", e);
     return (
       <Aviso
-        titulo="Link inválido"
-        texto="Não encontramos um questionário para este link. Verifique se copiou o endereço completo."
+        titulo="Serviço temporariamente indisponível"
+        texto="Não foi possível carregar o questionário no momento. Tente novamente em alguns instantes."
       />
     );
   }
-
-  if (respondente.respondeu) {
-    return (
-      <Aviso
-        titulo="Questionário já respondido"
-        texto="Este link já foi utilizado. Cada pessoa responde apenas uma vez. Obrigado pela participação."
-      />
-    );
-  }
-
-  const perguntas = await prisma.pergunta.findMany({
-    where: { publico: respondente.tipo },
-    orderBy: [{ pilar: "asc" }, { ordem: "asc" }],
-  });
-
-  const grupos = ORDEM_PILARES.map((pilar) => ({
-    pilar,
-    nome: NOME_PILAR[pilar],
-    perguntas: perguntas
-      .filter((p) => p.pilar === pilar)
-      .map((p) => ({ id: p.id, texto: p.texto })),
-  }));
-
-  return (
-    <QuestionarioForm
-      token={token}
-      tipo={respondente.tipo}
-      grupos={grupos}
-    />
-  );
 }
