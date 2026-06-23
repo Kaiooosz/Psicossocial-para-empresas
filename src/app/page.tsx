@@ -70,12 +70,14 @@ export default function Home() {
               Risco Psicossocial · NR-1
             </span>
           </div>
-          <Link
-            href="/questionario"
+          <a
+            href={WHATSAPP}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-sm bg-ink px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
           >
-            Ir para as perguntas <ArrowRight className="h-4 w-4" />
-          </Link>
+            <MessageCircle className="h-4 w-4" /> Solicitar análise
+          </a>
         </div>
       </header>
 
@@ -107,12 +109,14 @@ export default function Home() {
               advogado e psicóloga — a evidência documentada que a NR-1 exige.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/questionario"
+              <a
+                href={WHATSAPP}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="sheen relative inline-flex items-center gap-2 overflow-hidden rounded-sm bg-ink px-6 py-3 text-sm font-medium text-white shadow-lg shadow-ink/10 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-ink/15"
               >
-                Ir para as perguntas <ArrowRight className="h-4 w-4" />
-              </Link>
+                <MessageCircle className="h-4 w-4" /> Solicitar análise
+              </a>
               <Link
                 href="#contato"
                 className="inline-flex items-center gap-2 rounded-sm border border-ink/20 px-6 py-3 text-sm font-medium text-ink transition hover:-translate-y-0.5 hover:border-ink/40"
@@ -263,12 +267,12 @@ export default function Home() {
                 >
                   <MessageCircle className="h-4 w-4" /> WhatsApp
                 </a>
-                <Link
-                  href="/questionario"
+                <a
+                  href={`mailto:${EMAIL}`}
                   className="inline-flex items-center gap-2 rounded-sm border border-white/25 px-6 py-3 text-sm font-medium text-white transition hover:border-white/50"
                 >
-                  Responder agora <ArrowRight className="h-4 w-4" />
-                </Link>
+                  <Mail className="h-4 w-4" /> E-mail
+                </a>
               </div>
             </div>
 
