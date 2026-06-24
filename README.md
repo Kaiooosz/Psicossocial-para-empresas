@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Analise de Risco Psicossocial (NR-1)
 
-## Getting Started
+Plataforma de mapeamento de risco psicossocial organizacional conforme a NR-1. Metodologia e propriedade intelectual de **Anna Clara Silva Freitas**.
 
-First, run the development server:
+## Sobre
+
+Coleta questionarios anonimos de colaboradores e lideres, calcula indice de risco por pilar e exibe os resultados num painel administrativo. O respondente nunca ve o resultado — somente a equipe interna tem acesso.
+
+## Stack
+
+- Next.js 16 (App Router) + TypeScript
+- Tailwind CSS v4
+- Prisma 6 + PostgreSQL (Neon)
+- Auth admin via cookie HMAC
+- Lucide React (icones)
+
+## Metodologia
+
+- **4 pilares**: Cultura Organizacional, Organizacao do Trabalho, Metas e Performance, Lideranca e Gestao de Pessoas
+- **120 perguntas** (15/pilar x 2 publicos: colaborador e lider)
+- Todas em sentido negativo
+- **Pontuacao**: Concordo 6.667 | Parciais 3.333 | Neutro/Discordo 0
+- **Indice**: soma das pontuacoes / n respondentes (0-100)
+- **Niveis**: Gravissimo >90 | Grave 70-90 | Medio 50-70 | Baixo <50
+
+## Rotas
+
+| Rota | Funcao |
+|------|--------|
+| `/` | Landing do produto (NR-1, pilares, metodologia, entregaveis, CTA) |
+| `/questionario?token=...` | Formulario do respondente (anonimo, anti-reenvio) |
+| `/obrigado` | Confirmacao pos-envio |
+| `/admin/login` | Login administrativo |
+| `/admin` | Painel: empresas, tokens, indices, taxa de resposta |
+
+## Modelos
+
+Empresa, Respondente (anonimo: token + tipo + status), Pergunta, Resposta (valor + pontuacao), AdminUser.
+
+## Comandos
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run db:push     # Criar tabelas
+npm run db:seed     # Populer 120 perguntas + admin
+npm run dev         # Servidor de desenvolvimento (porta 3100)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Admin seed: `admin@riscopsicossocial.com.br` / `anna2026` (via .env)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Licenca
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Propriedade de **Anna Clara Silva Freitas** / **BBLAW**. Uso restrito.
